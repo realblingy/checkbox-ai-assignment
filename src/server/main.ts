@@ -4,6 +4,10 @@ import TaskRouter from '../server/routes/TaskRouter.js'
 
 const app = express();
 
+// Middleware
+app.use(express.json())
+
+// Routes
 app.use('/tasks', TaskRouter)
 
 ViteExpress.config({
