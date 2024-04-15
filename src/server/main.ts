@@ -1,12 +1,10 @@
 import express from 'express';
 import ViteExpress from 'vite-express';
+import TaskRouter from '../server/routes/TaskRouter.js'
 
 const app = express();
 
-// TODO: Example route, please delete this when you implement your own routes
-app.get('/hello', (_, res) => {
-  res.json({ result: 'Hello there!' });
-});
+app.use('/tasks', TaskRouter)
 
 ViteExpress.config({
   // Copy and paste of vite.config.ts just so vite-express does not need to import
