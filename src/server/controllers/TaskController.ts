@@ -8,6 +8,7 @@ const getAllTasks = (_req: Request, res: Response) => {
 
 const createTask = (req: Request, res: Response) => {
     const { name, description, due_date } = req.body
+    console.log(req.body)
 
     if (!name || !description || !due_date) {
         return res.status(400).json({ error: `Must supply name, description and due date when creating a task.` });
@@ -16,6 +17,18 @@ const createTask = (req: Request, res: Response) => {
     const newTask = TaskModel.createNewTask(name, description, due_date);
 
     return res.status(200).json(newTask);
+}
+
+const getTaskById = (req: Request, res: Response) => {
+    const taskId = parseInt(req.params.id);
+
+    const task = TaskModel.getTaskById(taskId);
+
+    if (!task) {
+        return res.status(400).json({ error: `Task with id: ${taskId} not found` });
+    }
+
+    return res.status(200).json(task);
 }
 
 const updateTask = (req: Request, res: Response) => {
@@ -33,5 +46,6 @@ const updateTask = (req: Request, res: Response) => {
 export default {
     updateTask,
     createTask,
-    getAllTasks
+    getAllTasks,
+    getTaskById
 }

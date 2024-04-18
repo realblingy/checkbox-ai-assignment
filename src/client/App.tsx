@@ -1,18 +1,22 @@
-import { useEffect, useState } from 'react';
+import { RouterProvider, createBrowserRouter, } from 'react-router-dom';
+import Home from './pages/Home';
+import CreateTask from './pages/CreateTask';
 
 const App = () => {
-  // TODO: example api call, please delete this when you implement your own components/calls
-  const [message, setMessage] = useState<string>();
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home />
+    },
+    {
+      path: "/create_task",
+      element: <CreateTask />
+    }
+  ])
 
-  useEffect(() => {
-    (async () => {
-      const response = await fetch('/hello');
-      const { result } = await response.json();
-      setMessage(result);
-    })();
-  });
-
-  return <p>{message}</p>;
+  return (
+    <RouterProvider router={router} />
+  );
 };
 
 export { App };

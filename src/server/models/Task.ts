@@ -42,8 +42,13 @@ const updateTask = (taskId: number, metadata: { name?: string, description?: str
     return taskToUpdate;
 }
 
+const getTaskById = (taskId: number): Task | undefined => {
+    return tasks.find(task => task.id === taskId);
+}
+
 export default {
     getAllTasks,
     createNewTask,
-    updateTask
+    updateTask,
+    getTaskById
 }
