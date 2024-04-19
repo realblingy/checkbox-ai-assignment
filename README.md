@@ -1,113 +1,48 @@
-# Checkbox Tech Challenge <!-- omit in toc -->
+# Backend
 
-Project template for Checkbox's Tech Challenge, a React client and Express/Node server bootstrapped with [Vite](https://vitejs.dev/) and [Vite-Express](https://github.com/szymmis/vite-express).
+The backend uses REST and follows a Model-Routes-Controller pattern which allows for better separation of concerns and strong code maintenance. This framework has become an industry standard and one that I've adopted over the years. I'm a. big fan of it, and so I decided to implement it in this assignment.
 
-## Table of contents <!-- omit in toc -->
+Regarding it's endpoints, there are are four main ones which cover all of our business use cases:
 
-- [Project scope](#project-scope)
-    - [Your task](#your-task)
-    - [Out of scope](#out-of-scope)
-    - [What we’ll be looking for](#what-well-be-looking-for)
-- [Getting started](#getting-started)
-    - [Development server](#development-server)
-        - [Prerequisites](#prerequisites)
-        - [Installing and running](#installing-and-running)
-    - [Docker Compose](#docker-compose)
-        - [Prerequisites](#prerequisites-1)
-        - [Installing and running](#installing-and-running-1)
-- [Database configuration](#database-configuration)
+- GET /tasks (retrieves all tasks)
+- GET /tasks/:id (retrieves task via id)
+- POST /tasks/create (creates a task)
+- PUT /tasks/update/:id (updates a task)
 
-## Project scope
+I believe all HTTP methods follow their specifications except for maybe PUT. PUT is used to replace an entire resource, but PATCH updates it partially. A really small design issue that doesn't affect the overall system, but it's good to point out.
 
-You’ve been assigned to a team working on building out a new task
-management software. Over the course of a few days, many customer
-interviews & user mapping flows, you and your product manager arrive
-together at the following set of user stories.
+Overall, while the backend is slightly opinionated on its structure, by following certain principles, it prevents "spaghetti code" from being produced and provides a maintainable codebase.
 
-- User should be able to create a new task, including the following
-  fields
-    - Name
-    - Description
-    - Due date
+### Further Improvements
+The database config file does not use the .env file. I personally just didn't have enough time but would like to outline this fault.
 
-- User should be able to view all tasks created in a list view, showing
-  all the following details
-    - Name
-    - Description
-    - Due date
-    - Create date
-    - Status
-        - Not urgent
-        - Due soon (Due date is within 7 days)
-        - Overdue
-- User should be able to edit task name, description and due date
-- User should be able to search based on task name
+I could have possibly used an ORM, considering the simplicity of the business use cases. However, barebones SQL avoids abstraction wherever possible and allows for flexible control over the code. Using abstractions can lead to inefficient queries if you don't know what's underneath the hood!
 
-### Your task
+# Frontend
 
-- Create a working solution that showcases the above user
-  stories using the project template provided in this repository
-- Please articulate and explain any design decisions you made in your
-  readme.
-- Feel free to use any libraries to help you
-- Don’t worry too much about styling it perfectly!
-- List any further improvements to your code that you would’ve made if
-  you had time
+I initially planned to have all business use cases fit into one page. However, this would have led to multiple states congregating into one component and kicking off their side effects. So I decided to decouple them into three main pages:
 
-### Out of scope
+- Home Page 
+- Create Task page
+- Update Task Page
 
-- Do not implement any authentication or authorisation
-- Do not implement any user management.
+This allowed for better state management and organisation of the code as well.
 
-### What we’ll be looking for
+Also, the styling is very barebones, and the main reasoning for that is running out of time. Most of my time was completing the user stories. However, if you're concerned about my CSS skills, you can check out my personal website https://jamesdang.netlify.app/. I coded this from scratch and made all the styles myself (This was created before ChatGPT as well).
 
-- Clean, manageable & well structured code
-- Production quality code
-- Git maturity. Please show your full git commit history (rather than
-  pushing everything up in one commit).
-- Understanding & effective implementation of fundamental software development principles
-- Demonstrated understanding of other tasks you would do if you had time
-  & how you would implement them
+If I maybe had an extra day or so, I would have had time to style it more.
 
-## Getting started
+### Further Improvements
+There is bug where if you edit a task with an existing date, it would not display it on the frontend. I would have fixed it but it was not a priority for me. Getting a working Docker run blocked me from continuing to resolve this issue.
 
-There are 2 ways to start the project out-of-the-box: [development server](#development-server) or [Docker Compose](#docker-compose). Please note that, for the purposes of the assessment, the final solution **_must_** work as intended via Docker Compose.
+Proper form validation instead of alerting at the top. I did this to improve the development time, but in the real world, I would have implemented form validation.
 
-### Development server
 
-#### Prerequisites
+# Version Control: Git
 
-- [Node](https://nodejs.org/en/) _(see [`.nvmrc`](.nvmrc) for version number)_
-- [Yarn 1](https://classic.yarnpkg.com/lang/en/)
+My git commit history was not of priority, given the time constraint. New ideas would rush in to solve the problem, and so I could not allocate time for better organisation. 
 
-#### Installing and running
+However, you will be able to see my gradual progress of the whole project through my commits.
 
-Open a command line of your preference and do the following:
-
-1. Run `yarn install` to install the dependencies.
-
-2. Run `yarn dev` to start the development server.
-
-3. Wait for a console message saying the app is ready, open the browser of your preference and navigate to http://localhost:3000.
-
-### Docker Compose
-
-#### Prerequisites
-
-- [Node](https://nodejs.org/en/) _(see [`.nvmrc`](.nvmrc) for version number)_
-- [Docker Desktop](https://docs.docker.com/desktop/): more convenient as it bundles Docker Compose as well
-
-#### Installing and running
-
-1. Duplicate `.env.sample` in the root folder, name it `.env` and configure all the empty `DB_POSTGRES_*` variables.
-
-2. Run `docker compose up` on a terminal of your choice.
-
-3. Wait for a console message saying the app is ready, open the browser of your preference and navigate to http://localhost:3000.
-
-4. Run `docker compose down` on a separate terminal whenever you want to stop the services.
-
-## Database configuration
-
-The challenge assumes you will be storing and retrieving records from a database. The project contains an initial configuration for [PostgreSQL](https://www.postgresql.org/) to speed things up but you might pick your system of choice if you prefer. Either way, as mentioned before, the application should work as expected when running Docker Compose.
-In case you are not using an ORM to manage and connect to the database and are sticking to the project's setup, you should populate the `init.sql` schema creation script at the root. It is run automatically as part of `docker compose up` the first time it gets executed to create your table(s).
+# Contact Me
+If you have any questions or concerns about my project, feel free to reach out to me via my email jamesphidang@gmail.com.
