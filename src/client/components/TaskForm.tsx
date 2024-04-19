@@ -9,13 +9,14 @@ export interface TaskInput {
 
 interface TaskFormProps {
   handleFormSubmit: (taskInput: TaskInput) => void;
+  task?: TaskInput;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ handleFormSubmit }) => {
-  const [taskInput, setTaskInput] = useState<TaskInput>({
-    name: '',
-    description: '',
-    due_date: 230034,
+const TaskForm: React.FC<TaskFormProps> = ({ handleFormSubmit, task }) => {
+  const [taskInput, setTaskInput] = useState<TaskInput>(task ? task : {
+    name: 'New Task',
+    description: 'New Description',
+    due_date: Date.now() + (14 * 24 * 60 * 60 * 1000) // 14 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds,
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -28,6 +29,12 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleFormSubmit }) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const { name, description } = taskInput;
+    if (name.length === 0 || description.length === 0) {
+      alert("Must have name or description");
+      return;
+    }
+
     handleFormSubmit(taskInput);
   }
 
@@ -55,13 +62,12 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleFormSubmit }) => {
             style={{ marginLeft: '10px', verticalAlign: 'top' }}
           />
         </div>
-        {/* Due Date input (if needed) */}
-        {/* <label>
+        <label>
           Due Date:
           <input type="date" name="due_date" value={taskInput.due_date} onChange={handleChange} />
-        </label> */}
-        <button type="submit" style={{ marginTop: '10px' }}>
-          Create
+        </label>
+        <button type="submit" style={{ marginTop: '10px', display: 'block' }}>
+          Done
         </button>
       </form>
     </div>

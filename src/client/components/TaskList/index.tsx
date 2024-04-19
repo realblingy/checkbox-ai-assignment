@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type Task = {
   id: number,
@@ -10,40 +11,45 @@ type Task = {
 
 interface TaskListProps {
   tasks: Task[],
-  setEditingTask: Function
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, setEditingTask }) => {
-  const today = new Date();
+const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
 
-//   const isDueSoon = (dueDate) => {
-//     const dueDateObj = new Date(dueDate);
-//     const diffTime = dueDateObj - today;
-//     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-//     return diffDays <= 7 && diffDays >= 0;
-//   };
+  const navigate = useNavigate();
 
-//   const isOverdue = (dueDate) => {
-//     const dueDateObj = new Date(dueDate);
-//     return dueDateObj < today;
-//   };
+  const handleEditClick = (taskId: number) => {
+    navigate('/tasks/edit/' + taskId)
+  };
+
+  const taskStatus = (due_date: number) => {
+    const now = Date.now();
+    const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+    const dueDate = new Date(due_date);
+
+    if (dueDate.getTime() < now) {
+      return "Overdue";
+    } else if (dueDate.getTime() <= now + sevenDaysInMilliseconds) {
+      return "Due soon";
+    } else {
+      return "Not urgent";
+    }
+  }
 
   return (
     <div>
       <h2>Task List</h2>
-      {tasks.map((task) => (
+      {tasks.map((task) => {
+        return (
         <div key={task.id} style={{ marginBottom: '20px', border: '1px solid #ccc', padding: '10px' }}>
           <h3>{task.name}</h3>
           <p>Description: {task.description}</p>
-          <button onClick={() => setEditingTask(task.id)}>Edit</button>
-          {/* <p>Due Date: {new Date(task.dueDate).toLocaleDateString()}</p> */}
-          {/* <p>Created Date: {new Date(task.createDate).toLocaleDateString()}</p> */}
-          {/* <p>Status: {task.status}</p> */}
-          {/* <p>{task.urgent ? 'Not Urgent' : 'Urgent'}</p> */}
-          {/* {isDueSoon(task.dueDate) && <p style={{ color: 'orange' }}>Due Soon</p>} */}
-          {/* {isOverdue(task.dueDate) && <p style={{ color: 'red' }}>Overdue</p>} */}
+          <p>Due Date: {new Date(task.due_date).toLocaleDateString()}</p>
+          <p>Created Date: {new Date(task.created_date).toLocaleDateString()}</p>
+          <p>Status: {taskStatus(task.due_date)}</p>
+          <button onClick={() => handleEditClick(task.id)}>Edit</button>
         </div>
-      ))}
+        ) 
+      })}
     </div>
   );
 };

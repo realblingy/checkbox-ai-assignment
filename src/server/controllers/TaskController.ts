@@ -8,7 +8,6 @@ const getAllTasks = (_req: Request, res: Response) => {
 
 const createTask = (req: Request, res: Response) => {
     const { name, description, due_date } = req.body
-    console.log(req.body)
 
     if (!name || !description || !due_date) {
         return res.status(400).json({ error: `Must supply name, description and due date when creating a task.` });

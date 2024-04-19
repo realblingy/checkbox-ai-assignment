@@ -17,10 +17,13 @@ const Home = () => {
   return (
     <div>
       <input placeholder='Search' />
-      <Link to={'/create_task'}>
+      <Link to={'/tasks/create'}>
         <button>Create Task +</button>
       </Link>
-      <TaskList setEditingTask={() => {}} tasks={tasks} />
+      {tasks.length === 0 ? (<p>No tasks here :(</p>)
+        :
+      <TaskList tasks={tasks} />}
+      
     </div>
   )
 }

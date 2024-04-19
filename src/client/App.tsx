@@ -1,6 +1,7 @@
 import { RouterProvider, createBrowserRouter, } from 'react-router-dom';
 import Home from './pages/Home';
 import CreateTask from './pages/CreateTask';
+import EditTask from './pages/EditTask';
 
 const App = () => {
   const router = createBrowserRouter([
@@ -9,9 +10,18 @@ const App = () => {
       element: <Home />
     },
     {
-      path: "/create_task",
-      element: <CreateTask />
-    }
+      path: "/tasks",
+      children: [
+        {
+          path: "create",
+          element: <CreateTask />
+        },
+        {
+          path: "edit/:id",
+          element: <EditTask />
+        }
+      ]
+    },
   ])
 
   return (
