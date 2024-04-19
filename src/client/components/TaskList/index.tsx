@@ -37,7 +37,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
 
   return (
     <div>
-      <h2>Task List</h2>
+      <h1>Task List</h1>
       {tasks.map((task) => {
         return (
         <div key={task.id} style={{ marginBottom: '20px', border: '1px solid #ccc', padding: '10px' }}>
