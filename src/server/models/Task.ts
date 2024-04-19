@@ -1,49 +1,69 @@
+import pool from "../database.js"
+
 export type Task = {
     id: number,
     name: string,
     description: string,
-    due_date: number,
-    created_date: number,
+    due_date: string,
+    create_date: string,
 }
 
-const tasks: Task[] = []
-
-const getAllTasks = () => {
-    return tasks
+const getAllTasks = async () => {
+    const { rows } = await pool.query('SELECT * FROM tasks ORDER BY id');
+    return rows;
 }
 
-const createNewTask = (name: string, description: string, due_date: number) => {
-    const newTask: Task = {
-        id: tasks.length + 1,
-        name,
-        description,
-        due_date,
-        created_date: Date.now()
+const createNewTask = async (name: string, description: string, due_date: number) => {
+    const create_date = (new Date()).toISOString();
+
+    const { rows } = await pool.query(
+        'INSERT INTO tasks (name, description, due_date, create_date) VALUES ($1, $2, $3, $4) RETURNING *',
+        [name, description, due_date, create_date]
+    );
+
+    return rows[0];
+}
+
+// Function to update an existing task in the database
+const updateTask = async (taskId: number, metadata: { name?: string, description?: string, due_date?: number }) => {
+    const { name, description, due_date } = metadata;
+    const updateQueryParams: string[] = [];
+    const updateQueryValues: any[] = [];
+
+    if (name !== undefined) {
+        updateQueryParams.push('name = $1');
+        updateQueryValues.push(name);
+    }
+    if (description !== undefined) {
+        updateQueryParams.push('description = $2');
+        updateQueryValues.push(description);
+    }
+    if (due_date !== undefined) {
+        updateQueryParams.push('due_date = $3');
+        updateQueryValues.push(due_date);
     }
 
-    tasks.push(newTask);
-
-    return newTask;
-}
-
-const updateTask = (taskId: number, metadata: { name?: string, description?: string, due_date?: number }) => {
-    const taskToUpdate = tasks.find(task => task.id === taskId);
-
-    if (!taskToUpdate) {
-        return undefined
+    if (updateQueryParams.length === 0) {
+        return undefined; // No valid update parameters provided
     }
 
-    const { name, description, due_date } = metadata
+    // Construct the UPDATE query dynamically
+    const updateQuery = `
+        UPDATE tasks 
+        SET ${updateQueryParams.join(', ')} 
+        WHERE id = $${updateQueryValues.length + 1} 
+        RETURNING *`;
 
-    taskToUpdate.name = name || taskToUpdate.name;
-    taskToUpdate.description = description || taskToUpdate.description;
-    taskToUpdate.due_date = due_date || taskToUpdate.due_date;
+    // Execute the UPDATE query with parameter values
+    const { rows } = await pool.query(updateQuery, [...updateQueryValues, taskId]);
 
-    return taskToUpdate;
+    return rows[0]; // Return the updated task
 }
 
-const getTaskById = (taskId: number): Task | undefined => {
-    return tasks.find(task => task.id === taskId);
+// Function to retrieve a task by ID from the database
+const getTaskById = async (taskId: number) => {
+    const { rows } = await pool.query('SELECT * FROM tasks WHERE id = $1', [taskId]);
+    return rows[0]; // Return the task if found, otherwise undefined
 }
 
 export default {

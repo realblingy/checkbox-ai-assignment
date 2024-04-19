@@ -5,15 +5,15 @@ type Task = {
   id: number,
   name: string,
   description: string,
-  due_date: number,
-  created_date: number,
+  due_date: string,
+  create_date: string,
 }
 
 interface TaskListProps {
   tasks: Task[],
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks = [] }) => {
 
   const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
     navigate('/tasks/edit/' + taskId)
   };
 
-  const taskStatus = (due_date: number) => {
+  const taskStatus = (due_date: string) => {
     const now = Date.now();
     const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
     const dueDate = new Date(due_date);
@@ -43,8 +43,8 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
         <div key={task.id} style={{ marginBottom: '20px', border: '1px solid #ccc', padding: '10px' }}>
           <h3>{task.name}</h3>
           <p>Description: {task.description}</p>
+          <p>Created Date: {new Date(task.create_date).toLocaleDateString()}</p>
           <p>Due Date: {new Date(task.due_date).toLocaleDateString()}</p>
-          <p>Created Date: {new Date(task.created_date).toLocaleDateString()}</p>
           <p>Status: {taskStatus(task.due_date)}</p>
           <button onClick={() => handleEditClick(task.id)}>Edit</button>
         </div>

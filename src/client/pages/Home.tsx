@@ -10,6 +10,9 @@ const Home = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       const response = await fetch('/tasks');
+      if (response.status !== 200) {
+        return;
+      }
       const taskData = await response.json();
       setTasks(taskData);
       setFilteredTasks(taskData); // Initialize filtered tasks with all tasks
@@ -30,6 +33,8 @@ const Home = () => {
       setFilteredTasks(filtered); // Update filtered tasks based on search input
     }
   };
+
+  (filteredTasks)
 
   return (
     <div>

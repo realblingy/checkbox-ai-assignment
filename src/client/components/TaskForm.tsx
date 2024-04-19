@@ -4,7 +4,7 @@ export interface TaskInput {
   id?: number;
   name: string;
   description: string;
-  due_date: number;
+  due_date?: string;
 }
 
 interface TaskFormProps {
@@ -13,11 +13,14 @@ interface TaskFormProps {
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ handleFormSubmit, task }) => {
-  const [taskInput, setTaskInput] = useState<TaskInput>(task ? task : {
-    name: 'New Task',
-    description: 'New Description',
-    due_date: Date.now() + (14 * 24 * 60 * 60 * 1000) // 14 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds,
-  });
+  const initialTaskInput: TaskInput = task
+    ? task
+    : {
+        name: '',
+        description: '',
+      };
+
+  const [taskInput, setTaskInput] = useState<TaskInput>(initialTaskInput);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -29,14 +32,14 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleFormSubmit, task }) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { name, description } = taskInput;
-    if (name.length === 0 || description.length === 0) {
-      alert("Must have name or description");
+    const { name, description, due_date } = taskInput;
+    if (name.trim().length === 0 || description.trim().length === 0 || !due_date) {
+      alert('Name, description and due date are required');
       return;
     }
 
     handleFormSubmit(taskInput);
-  }
+  };
 
   return (
     <div>
@@ -47,6 +50,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleFormSubmit, task }) => {
             type="text"
             id="name"
             name="name"
+            placeholder="Enter name"
             value={taskInput.name}
             onChange={handleChange}
             style={{ marginLeft: '10px' }}
@@ -57,17 +61,24 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleFormSubmit, task }) => {
           <textarea
             id="description"
             name="description"
+            placeholder="Enter description"
             value={taskInput.description}
             onChange={handleChange}
             style={{ marginLeft: '10px', verticalAlign: 'top' }}
           />
         </div>
-        <label>
-          Due Date:
-          <input type="date" name="due_date" value={taskInput.due_date} onChange={handleChange} />
-        </label>
+        <div style={{ marginBottom: '10px' }}>
+          <label htmlFor="due_date">Due Date:</label>
+          <input
+            type="date"
+            id="due_date"
+            name="due_date"
+            value={taskInput.due_date}
+            onChange={handleChange}
+          />
+        </div>
         <button type="submit" style={{ marginTop: '10px', display: 'block' }}>
-          Done
+          Submit
         </button>
       </form>
     </div>

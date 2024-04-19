@@ -10,19 +10,29 @@ services:
       - 3000:3000
     depends_on:
       - database
+    networks:
+      - mynetwork
 
   database:
     image: postgres
-    container_name: checkbox-postgres 
+    container_name: checkbox-postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - ${DB_POSTGRES_PORT}:${DB_POSTGRES_PORT}
     environment:
       - POSTGRES_DB=${DB_POSTGRES_DATABASE}
       - POSTGRES_USER=${DB_POSTGRES_USERNAME}
       - POSTGRES_PASSWORD=${DB_POSTGRES_PASSWORD}
+    networks:
+      mynetwork:
+        ipv4_address: 172.25.0.10  # Assign a specific IP address
+
+networks:
+  mynetwork:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16  # Define a different subnet for IP address allocation
 
 volumes:
   pgdata:
