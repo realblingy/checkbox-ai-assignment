@@ -1,3 +1,7 @@
+# Task Manager - Full Stack Application
+
+Uses Postgres, Node.js and React.js.
+
 # Backend
 
 The backend uses REST and follows a Model-Routes-Controller pattern which allows for better separation of concerns and strong code maintenance. This framework has become an industry standard and one that I've adopted over the years. I'm a big fan of it, and so I decided to implement it in this assignment.
